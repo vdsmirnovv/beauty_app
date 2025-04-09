@@ -1,6 +1,7 @@
-
 import { useEffect, useState } from "react";
 import WebApp from "@twa-dev/sdk";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -16,7 +17,7 @@ export default function App() {
     const telegramId = initData?.user?.id;
     const fullName = `${initData?.user?.first_name} ${initData?.user?.last_name}`;
 
-    fetch(`http://127.0.0.1:8000/api/users/${telegramId}`)
+    fetch(`${API_URL}/api/users/${telegramId}`)
       .then(res => res.json())
       .then(data => {
         setUser({ ...data, fullName });
@@ -34,21 +35,21 @@ export default function App() {
   }, [role]);
 
   const loadServices = () => {
-    fetch("http://127.0.0.1:8000/api/services")
+    fetch(`${API_URL}/api/services`)
       .then(res => res.json())
       .then(setServices)
       .catch(err => console.error("Ошибка загрузки услуг:", err));
   };
 
   const loadBookings = () => {
-    fetch("http://127.0.0.1:8000/api/bookings")
+    fetch(`${API_URL}/api/bookings`)
       .then(res => res.json())
       .then(setBookings)
       .catch(err => console.error("Ошибка загрузки записей:", err));
   };
 
   const loadSlots = () => {
-    fetch("http://127.0.0.1:8000/api/slots")
+    fetch(`${API_URL}/api/slots`)
       .then(res => res.json())
       .then(setSlots)
       .catch(err => console.error("Ошибка загрузки слотов:", err));
@@ -56,7 +57,7 @@ export default function App() {
 
   const handleCreateService = () => {
     if (!newService.name || !newService.price) return;
-    fetch("http://127.0.0.1:8000/api/services", {
+    fetch(`${API_URL}/api/services`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: newService.name, price: parseFloat(newService.price) })
@@ -69,7 +70,7 @@ export default function App() {
 
   const handleCreateSlot = () => {
     if (!newSlot.date_time || !newSlot.service_id) return;
-    fetch("http://127.0.0.1:8000/api/slots", {
+    fetch(`${API_URL}/api/slots`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -84,7 +85,7 @@ export default function App() {
   };
 
   const handleBooking = (slotId, serviceId) => {
-    fetch("http://127.0.0.1:8000/api/bookings", {
+    fetch(`${API_URL}/api/bookings`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
