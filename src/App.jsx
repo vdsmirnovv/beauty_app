@@ -20,7 +20,7 @@ export default function App() {
     const telegramId = initData?.user?.id;
     const fullName = `${initData?.user?.first_name} ${initData?.user?.last_name}`;
 
-    fetch(`${API_URL}/api/users/${telegramId}`)
+    fetch(`${API_URL}/api/users/by-telegram-id/${telegramId}`)
       .then(res => res.json())
       .then(data => {
         setUser({ ...data, fullName });
