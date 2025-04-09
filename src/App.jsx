@@ -3,6 +3,9 @@ import WebApp from "@twa-dev/sdk";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+console.log("API_URL:", API_URL);
+
+
 export default function App() {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState("user");
