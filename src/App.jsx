@@ -10,6 +10,7 @@ export default function App() {
   const [services, setServices] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [slots, setSlots] = useState([]);
+  const [users, setUsers] = useState([]);
   const [newService, setNewService] = useState({ name: "", price: "" });
   const [newSlot, setNewSlot] = useState({ date_time: "", service_id: "" });
 
@@ -33,6 +34,7 @@ export default function App() {
     loadServices();
     loadBookings();
     loadSlots();
+    loadUsers();
   }, [role]);
 
   const loadServices = () => {
@@ -54,6 +56,13 @@ export default function App() {
       .then(res => res.json())
       .then(setSlots)
       .catch(err => console.error("Ошибка загрузки слотов:", err));
+  };
+
+  const loadUsers = () => {
+    fetch(`${API_URL}/api/users`)
+      .then(res => res.json())
+      .then(setUsers)
+      .catch(err => console.error("Ошибка загрузки пользователей:", err));
   };
 
   const handleCreateService = () => {
@@ -116,6 +125,7 @@ export default function App() {
           newSlot={newSlot}
           setNewSlot={setNewSlot}
           slots={slots}
+          users={users}
         />
       ) : (
         <UserInterface
@@ -129,7 +139,7 @@ export default function App() {
   );
 }
 
-function AdminPanel({ services, bookings, newService, setNewService, handleCreateService, handleCreateSlot, newSlot, setNewSlot, slots }) {
+function AdminPanel({ services, bookings, newService, setNewService, handleCreateService, handleCreateSlot, newSlot, setNewSlot, slots, users }) {
   return (
     <div className="card">
       <h2 className="section-header">Панель администратора</h2>
@@ -180,6 +190,20 @@ function AdminPanel({ services, bookings, newService, setNewService, handleCreat
           {slots.map(slot => (
             <li key={slot.id}>{new Date(slot.date_time).toLocaleString()} — услуга #{slot.service_id}</li>
           ))}
+        </ul>
+      </div>
+
+      <div>
+        <h3 className="font-semibold mt-4">Записи клиентов:</h3>
+        <ul>
+          {bookings.map((booking) => {
+            const slot = slots.find(s => s.id === booking.slot_id);
+            const service = services.find(s => s.id === booking.service_id);
+            const user = users.find(u => u.id === booking.user_id);
+            return (
+              <li key={booking.id}>{new Date(slot?.date_time).toLocaleString()} — {service?.name} — {user?.full_name || `ID ${booking.user_id}`}</li>
+            );
+          })}
         </ul>
       </div>
     </div>
